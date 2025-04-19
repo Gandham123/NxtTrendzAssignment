@@ -1,11 +1,11 @@
-
+import { useSelector,useDispatch } from "react-redux";
 import {Link, useNavigate} from 'react-router-dom';
 
 
 import Cookies from "js-cookie";
 const HeaderEl=()=>{
   const navigate=useNavigate();
-  
+  const totalProductsInCart=useSelector((state)=>state.cartProducts.items)
   const logoutHandel=()=>{
     Cookies.remove('token');
     
@@ -33,6 +33,11 @@ const HeaderEl=()=>{
             <Link to="/cart" className="font-sans font-[450] text-[20px] text-[#1e293b] mx-[15px]">
               Cart
             </Link>
+            <div className="mt-1 -ml-2 mb-1">
+             {totalProductsInCart.length !=0 && <span className="bg-white md:bg-blue-100 text-blue-700 font-[Roboto] text-[12px] font-medium rounded-full px-[5px] py-[2px]">
+              {totalProductsInCart.length}
+            </span>}
+            </div>
            
           </div>
 
@@ -81,6 +86,11 @@ const HeaderEl=()=>{
               alt="nav-cart"
             />
           </Link>
+          <div className="mt-1 -ml-2 mb-1">
+             {totalProductsInCart.length !=0 && <span className="bg-white md:bg-blue-100 text-blue-700 font-[Roboto] text-[12px] font-medium rounded-full px-[5px] py-[2px]">
+              {totalProductsInCart.length}
+            </span>}
+            </div>
         </div>
       </div>
     </div>
