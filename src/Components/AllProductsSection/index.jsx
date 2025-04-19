@@ -82,7 +82,7 @@ class AllProductEl extends Component{
         this.setState({ apiStaus: apiStatusList.inProgress });
       
         const { activeOptionId, inputValue, categoryItem, ratingItem } = this.state;
-        const jwtToken = Cookies.get("AccessToken");
+        const jwtToken = Cookies.get("token");
       
         const apiUrl = `https://apis.ccbp.in/products?sort_by=${activeOptionId}&category=${categoryItem}&title_search=${inputValue}&rating=${ratingItem}`;
       
