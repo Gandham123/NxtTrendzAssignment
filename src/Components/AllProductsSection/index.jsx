@@ -6,6 +6,7 @@ import RatingItemEl from "../RatingItems"
 import { Component } from "react"
 import Cookies from "js-cookie"
 import {ThreeDots} from "react-loading-icons";
+import axios from 'axios';
 const sortByOptins=[
     {
       optionId:'PRICE_HIGH',
@@ -77,35 +78,43 @@ class AllProductEl extends Component{
     componentDidMount(){
         this.getData()
       }
-    getData=async()=>{
-        this.setState({apiStaus:apiStatusList.inProgress})
-        const{activeOptionId,inputValue,categoryItem,ratingItem}=this.state;
+      getData = async () => {
+        this.setState({ apiStaus: apiStatusList.inProgress });
+      
+        const { activeOptionId, inputValue, categoryItem, ratingItem } = this.state;
         const jwtToken = Cookies.get("AccessToken");
-        const options={
-          method:"GET",
-          headers:{
-            Authorization:`Bearer ${jwtToken}`
-         },
-        }
-        const apiUrl=`https://apis.ccbp.in/products?sort_by=${activeOptionId}&category=${categoryItem}&title_search=${inputValue}&rating=${ratingItem}`
-        const response= await fetch(apiUrl,options)
-        if(response.ok===true){
-          const data=await response.json()
+      
+        const apiUrl = `https://apis.ccbp.in/products?sort_by=${activeOptionId}&category=${categoryItem}&title_search=${inputValue}&rating=${ratingItem}`;
+      
+        const headers = {
+          Authorization: `Bearer ${jwtToken}`,
+        };
+      
+        try {
+          const response = await axios.get(apiUrl, { headers });
+      
+          const data = response.data;
           console.log(data);
-          const ConvertingTocamelCase=data.products.map((eachItem)=>({
-          id:eachItem.id,
-          title:eachItem.title,
-          image_url:eachItem.image_url,
-          price:eachItem.price,
-          rating:eachItem.rating,
-          brand:eachItem.brand
-        }));
-        this.setState({productsList:ConvertingTocamelCase,apiStaus:apiStatusList.sucess})
+      
+          const ConvertingTocamelCase = data.products.map((eachItem) => ({
+            id: eachItem.id,
+            title: eachItem.title,
+            image_url: eachItem.image_url,
+            price: eachItem.price,
+            rating: eachItem.rating,
+            brand: eachItem.brand,
+          }));
+      
+          this.setState({
+            productsList: ConvertingTocamelCase,
+            apiStaus: apiStatusList.sucess,
+          });
+      
+        } catch (error) {
+          console.error("API Error:", error);
+          this.setState({ apiStaus: apiStatusList.failure });
         }
-        else if(response.status===400){
-          this.setState({apiStaus:apiStatusList.failure})
-        }
-    }
+      };      
     updateActiveOptionId=activeOptionId=>{
         this.setState({activeOptionId},this.getData)
     }
